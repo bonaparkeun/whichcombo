@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>5x5 색깔 보드</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #fafafa;
+      gap: 16px;
+    }
+
+    h1 { margin-bottom: 4px; font-size: 20px; }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 70px);
+      grid-template-rows: repeat(5, 70px);
+      gap: 8px;
+    }
+
+    .cell {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      transition: 0.15s ease;
+      user-select: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    .cell.pressed {
+      transform: translateY(2px) scale(0.97);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.25);
+      color: #fff;
+    }
+
+    .reset-btn {
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #333;
+      color: #fff;
+      transition: 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background: #555;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>5x5 컬러 게임판</h1>
+
+  <!-- 🔵 초기화 버튼 -->
+  <button class="reset-btn" id="resetBtn">초기화</button>
+
+  <div class="board" id="board"></div>
+
+  <script>
+    const boardEl = document.getElementById('board');
+    const resetBtn = document.getElementById('resetBtn');
+    const SIZE = 5;
+
+    // 행 라벨 (A~E)
+    const rowLabels = ['A', 'B', 'C', 'D', 'E'];
+
+    // 컬럼별 기본 파스텔 색상
+    const columnColors = [
+      "#ffd5d2",
+      "#ffe4c2",
+      "#d4f6d4",
+      "#d9e8ff",
+      "#ecd9ff"
+    ];
+
+    // 눌렸을 때의 진한 색상
+    const pressedColumnColors = [
+      "#ff9b91",
+      "#ffc172",
+      "#96d896",
+      "#9fb9ff",
+      "#b999ff"
+    ];
+
+    const cells = [];
+
+    // 보드 생성
+    for (let row = 0; row < SIZE; row++) {
+      for (let col = 0; col < SIZE; col++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+
+        cell.textContent = rowLabels[row] + (col + 1);
+        cell.style.backgroundColor = columnColors[col];
+
+        // 클릭 이벤트
+        cell.addEventListener('click', () => {
+          const nowPressed = cell.classList.toggle('pressed');
+          cell.style.backgroundColor = nowPressed
+            ? pressedColumnColors[col]
+            : columnColors[col];
+        });
+
+        cells.push({ cell, row, col });
+        boardEl.appendChild(cell);
+      }
+    }
+
+    // 🔵 초기화 버튼 기능
+    resetBtn.addEventListener('click', () => {
+      cells.forEach(({ cell, col }) => {
+        cell.classList.remove('pressed');
+        cell.style.backgroundColor = columnColors[col];
+      });
+    });
+
+  </script>
+</body>
+</html>
